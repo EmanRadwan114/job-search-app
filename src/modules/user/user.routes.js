@@ -56,7 +56,7 @@ userRouter
 
 ^ 3. return the result in the response
 */
-userRouter.get("profile/:userId", getProfileData);
+userRouter.get("/profile/:userId", getProfileData);
 
 /*
 * updatePassword steps:
