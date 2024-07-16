@@ -2,27 +2,21 @@
 process.on("uncaughtException", (err) =>
   console.log("there is a programming error", err)
 );
+// ^config .env
+import dotenv from "dotenv";
+dotenv.config();
 
+// ^imports
 import express from "express";
-import cors from "cors";
-import { globalErrorHandler } from "./src/middleware/errorHandling.middleware.js";
-import { handleNotFoundError } from "./src/middleware/notfoundError.middleware.js";
+import "./database/dbConnection.js";
+import bootstrap from "./src/utils/bootstrap.js";
 
 // ^creates an app server
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ^allow any domain to access my app endpoints
-app.use(cors());
-
-// ^parses the body of the request that includes JSON payload
-app.use(express.json());
-
-// ^handles not found error by passing the error to the globalErrorHandler
-app.use("*", handleNotFoundError);
-
-// ^handles the response of any error in the app server
-app.use(globalErrorHandler);
+// ^includes any app.use()
+bootstrap(app);
 
 // ^handle err outside express
 process.on("unhandledRejection", (err) =>
