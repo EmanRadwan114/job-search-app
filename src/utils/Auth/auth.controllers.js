@@ -41,13 +41,24 @@ export const verifyEmail = catchError(async (req, res, next) => {
 
 // ^sign in
 export const signin = catchError(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({
+    $or: [
+      { email: req.body.email },
+      { mobileNumber: req.body.mobileNumber },
+      { recoveryEmail: req.body.recoveryEmail },
+    ],
+  });
   if (!user || !bcrypt.compareSync(req.body.password, user.password))
     return next(new AppError("incorrect email or passwod", 401));
 
   await User.updateOne({ email: user.email }, { status: "online" });
   jwt.sign(
-    { userId: user._id, email: user.email, role: user.role },
+    {
+      userId: user._id,
+      email: user.email,
+      role: user.role,
+      userName: user.userName,
+    },
     process.env.SIGNIN_KEY,
     (err, token) => {
       res.json({ message: "signed in successfull", token });

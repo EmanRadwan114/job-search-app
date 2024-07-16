@@ -10,10 +10,14 @@ const schema = new Schema(
     firstName: {
       type: String,
       required: [true, "first name is required"],
+      minlength: 3,
+      maxlength: 50,
     },
     lastName: {
       type: String,
       required: [true, "last name is required"],
+      minlength: 3,
+      maxlength: 50,
     },
     userName: {
       type: String,
@@ -22,10 +26,14 @@ const schema = new Schema(
       type: String,
       required: [true, "email is required"],
       unique: true,
+      minlength: 5,
+      maxlength: 255,
     },
     password: {
       type: String,
       required: [true, "password is required"],
+      minlength: 6,
+      maxlength: 1024,
     },
     recoveryEmail: {
       type: String,
