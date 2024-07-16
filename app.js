@@ -4,12 +4,16 @@ process.on("uncaughtException", (err) =>
 );
 
 import express from "express";
+import cors from "cors";
 import { globalErrorHandler } from "./src/middleware/errorHandling.middleware.js";
 import { handleNotFoundError } from "./src/middleware/notfoundError.middleware.js";
 
 // ^creates an app server
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// ^allow any domain to access my app endpoints
+app.use(cors());
 
 // ^parses the body of the request that includes JSON payload
 app.use(express.json());
