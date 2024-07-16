@@ -15,7 +15,7 @@ const schema = new Schema(
       type: String,
       required: [true, "last name is required"],
     },
-    useerName: {
+    userName: {
       type: String,
     },
     email: {
@@ -25,7 +25,6 @@ const schema = new Schema(
     },
     password: {
       type: String,
-      select: false,
       required: [true, "password is required"],
     },
     recoveryEmail: {
@@ -33,7 +32,7 @@ const schema = new Schema(
       required: [true, "recovery email is required"],
     },
     DOB: {
-      type: Date,
+      type: String,
       required: [true, "date of birth is required"],
       validate: [validateDOB, "Date of birth must be in the format YYYY-MM-DD"],
     },
