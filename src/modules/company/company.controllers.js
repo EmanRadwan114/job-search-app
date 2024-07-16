@@ -14,7 +14,9 @@ export const addCompany = catchError(async (req, res, next) => {
       result,
     });
   }
-  return next(new AppError("you are not authorized to add a company.", 401));
+  return next(
+    new AppError("you are a user and you cannot not add a company.", 401)
+  );
 });
 
 // ^ update company
@@ -38,12 +40,14 @@ export const updateCompany = catchError(async (req, res, next) => {
         new: true,
       }
     );
-    res.json({ message: "success", result });
+    return res.json({ message: "success", result });
   }
+  return next(
+    new AppError("you are a user and you cannot not update a company.", 401)
+  );
 });
 
 // ^ delete company
-
 export const deleteCompany = catchError(async (req, res, next) => {
   if (req.user.role !== "User") {
     const company = await Company.findById({ _id: req.params.companyId });
@@ -58,6 +62,40 @@ export const deleteCompany = catchError(async (req, res, next) => {
     const result = await Company.findByIdAndDelete({
       companyName: company.companyName,
     });
-    res.json({ message: "success", result });
+    return res.json({ message: "success", result });
   }
+  return next(
+    new AppError("you are a user and you cannot not delete a company.", 401)
+  );
+});
+
+// ^getcompany data
+export const getCompanyData = catchError(async (req, res, next) => {
+  if (req.user.role !== "User") {
+    const company = await Company.findById({
+      _id: req.params.companyId,
+    }).populate("jobs");
+    if (!company) return next(new AppError("company is not found", 404));
+
+    return res.json({ message: "success", company });
+  }
+  return next(
+    new AppError("you are a user and you cannot not get the company data", 401)
+  );
+});
+
+// ^ Search Compny
+export const searchCompany = catchError(async (req, res, next) => {
+  const { name } = req.query;
+
+  if (req.user.role === "User" || req.user.role === "Company_HR") {
+    const companies = await Company.find({
+      companyName: new RegExp(name, "i"),
+    });
+
+    return res.json({ message: "success", companies });
+  }
+  return next(
+    new AppError("Your Role cannot allow you to search for a company", 401)
+  );
 });

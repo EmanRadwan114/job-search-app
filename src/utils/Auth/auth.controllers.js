@@ -51,7 +51,7 @@ export const signin = catchError(async (req, res, next) => {
   if (!user || !bcrypt.compareSync(req.body.password, user.password))
     return next(new AppError("incorrect email or passwod", 401));
 
-  await User.updateOne({ email: user.email }, { status: "online" });
+  await User.findOneAndUpdate({ email: user.email }, { status: "online" });
   jwt.sign(
     {
       userId: user._id,
@@ -61,7 +61,7 @@ export const signin = catchError(async (req, res, next) => {
     },
     process.env.SIGNIN_KEY,
     (err, token) => {
-      res.json({ message: "signed in successfull", token });
+      return res.json({ message: "signed in successfull", token });
     }
   );
 });

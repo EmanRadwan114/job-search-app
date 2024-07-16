@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   addCompany,
   deleteCompany,
+  getCompanyData,
+  searchCompany,
   updateCompany,
 } from "./company.controllers.js";
 
@@ -23,7 +25,7 @@ companyRouter.post("/", addCompany);
 ^ 1. check if the user is a company hr (if he is authorized to update a company) by checking the role added 
 ^    to the req.user at the verify token middleware after token verification
 
-^ 2. find the company by its id to check if it is already existed or not and handle errors if there is any
+^ 2. find the company by its id that is sent in the params to check if it is already existed or not and handle errors if there is any
 
 ^ 3. if there is no error, check that if the user is the company owner by comparing 
 ^    the ids of both the company owner and the user trying to update it, 
@@ -34,13 +36,40 @@ companyRouter.post("/", addCompany);
 ^ 1. check if the user is a company hr (if he is authorized to update a company) by checking the role added 
 ^    to the req.user at the verify token middleware after token verification
 
-^ 2. find the company by its id to check if it is already existed or not and handle errors if there is any
+^ 2. find the company by its id that is sent in the params to check if it is already existed or not and handle errors if there is any
 
 ^ 3. if there is no error, check that if the user is the company owner by comparing 
 ^    the ids of both the company owner and the user trying to delet it, 
 ^    if both is the same, the user can delete the company and see the response
 */
 
-companyRouter.route("/:companyId").put(updateCompany).delete(deleteCompany);
+/* 
+* getCompanyData steps:
+^ 1. check if the user is a company hr (if he is authorized to get a company data) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. find the company by its id that is sent in the params to check if it is already existed or not and handle errors if there is any
+
+^ 3. if there is no error, send the data in the response
+*/
+
+companyRouter
+  .route("/:companyId")
+  .put(updateCompany)
+  .delete(deleteCompany)
+  .get(getCompanyData);
+
+/* 
+* searchCompany steps:
+^ 1. check if the searcher is a company hr or user (signed up) or not registered 
+^    (if he is authorized to search a company) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. find the company by its name (apply regex with i flag to cancel case sensitivity) that is sent in 
+^    the query param to check if it is already existed or not and handle errors if there is any
+
+^ 3. if there is no error, send the data of the searched company in the response
+*/
+companyRouter.get("/search", searchCompany);
 
 export default companyRouter;
