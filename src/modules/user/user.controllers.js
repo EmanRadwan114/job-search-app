@@ -6,7 +6,7 @@ import AppError from "./../../utils/Handle Errrors/AppError.js";
 export const updateAccount = catchError(async (req, res, next) => {
   const { email, mobileNumber } = req.body;
 
-  const user = await User.findById(req.user.userId);
+  const user = await User.findById({ _id: req.user.userId });
   if (!user) return next(new AppError("User not found.", 404));
 
   if (email && (await User.findOne({ email, _id: { $ne: user._id } }))) {
@@ -20,22 +20,28 @@ export const updateAccount = catchError(async (req, res, next) => {
     return next(new AppError("Mobile number already in use.", 409));
   }
 
-  const result = await User.findByIdAndUpdate(req.user.userId, req.body, {
-    new: true,
-  });
+  const result = await User.findByIdAndUpdate(
+    { _id: req.user.userId },
+    req.body,
+    {
+      new: true,
+    }
+  );
   res.json({ message: "success", result });
 });
 
 // ^delete user
 export const deleteAccount = catchError(async (req, res, next) => {
-  const user = await User.findByIdAndDelete(req.user.userId);
+  const user = await User.findByIdAndDelete({ _id: req.user.userId });
   if (!user) return next(new AppError("User not found.", 404));
   res.json({ message: "success", result });
 });
 
 // ^ get user account data
 export const getUserAccountData = catchError(async (req, res, next) => {
-  const user = await User.findById(req.user.userId).select("-password");
+  const user = await User.findById({ _id: req.user.userId }).select(
+    "-password"
+  );
   if (!user) return next(new AppError("User not found.", 404));
 
   res.json({ message: "success", user });
@@ -44,7 +50,9 @@ export const getUserAccountData = catchError(async (req, res, next) => {
 // ^ get profile data
 
 export const getProfileData = catchError(async (req, res, next) => {
-  const user = await User.findById(req.params.userId).select("-password");
+  const user = await User.findById({ _id: req.params.userId }).select(
+    "-password"
+  );
   if (!user) return next(new AppError("User not found.", 404));
 
   res.json({ message: "success", user });
@@ -53,7 +61,7 @@ export const getProfileData = catchError(async (req, res, next) => {
 // ^ update password
 export const updatePassword = catchError(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
-    req.user.userId,
+    { _id: req.user.userId },
     req.body.password,
     {
       new: true,

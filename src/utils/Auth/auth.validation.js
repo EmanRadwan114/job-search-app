@@ -18,7 +18,6 @@ const signUpVal = joi.object({
     .pattern(/^(\+2){0,1}01[0125][0-9]{8}$/)
     .required(),
   role: joi.string().required(),
-  status: joi.string(),
 });
 
 const signInVal = joi.object({
