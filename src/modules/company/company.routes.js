@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { addCompany, updateCompany } from "./company.controllers.js";
+import {
+  addCompany,
+  deleteCompany,
+  updateCompany,
+} from "./company.controllers.js";
 
 const companyRouter = Router();
 
@@ -19,13 +23,24 @@ companyRouter.post("/", addCompany);
 ^ 1. check if the user is a company hr (if he is authorized to update a company) by checking the role added 
 ^    to the req.user at the verify token middleware after token verification
 
-^ 2. find the company by its name to check if it is already existed or not and handle errors if there is any
+^ 2. find the company by its id to check if it is already existed or not and handle errors if there is any
 
-^ 3. if there is no error, check that the user is the company owner by comparing 
+^ 3. if there is no error, check that if the user is the company owner by comparing 
 ^    the ids of both the company owner and the user trying to update it, 
 ^    if both is the same, the user can update the company and see the response
 */
+/* 
+* deleteCompany steps:
+^ 1. check if the user is a company hr (if he is authorized to update a company) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
 
-companyRouter.put("/:companyName", updateCompany);
+^ 2. find the company by its id to check if it is already existed or not and handle errors if there is any
+
+^ 3. if there is no error, check that if the user is the company owner by comparing 
+^    the ids of both the company owner and the user trying to delet it, 
+^    if both is the same, the user can delete the company and see the response
+*/
+
+companyRouter.route("/:companyId").put(updateCompany).delete(deleteCompany);
 
 export default companyRouter;

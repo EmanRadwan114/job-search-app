@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import catchError from "./../Handle Errrors/catchError.js";
+import AppError from "./../Handle Errrors/AppError.js";
+
 // ^config .env
 import dotenv from "dotenv";
 dotenv.config();

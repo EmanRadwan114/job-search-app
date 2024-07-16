@@ -20,9 +20,9 @@ export default function bootstrap(app) {
   // ^handle app routes
   app.use("/auth", authRouter);
   app.use("/user", verifyToken, userRouter);
-  app.use("/job", jobRouter);
-  app.use("/company", companyRouter);
-  app.use("/application", ApplicationRouter);
+  app.use("/job", verifyToken, jobRouter);
+  app.use("/company", verifyToken, companyRouter);
+  app.use("/application", verifyToken, ApplicationRouter);
 
   // ^handles the response of any error in the app server
   app.use(globalErrorHandler);

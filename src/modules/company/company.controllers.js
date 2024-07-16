@@ -1,32 +1,32 @@
 import catchError from "./../../utils/Handle Errrors/catchError.js";
 import Company from "./../../../database/models/company.model.js";
+import AppError from "./../../utils/Handle Errrors/AppError.js";
 
 export const addCompany = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
     let company = await Company.findOne(req.body.companyName);
-    if (company) next(new AppError("ompany is already found.", 409));
+    if (company) return next(new AppError("Company is already found.", 409));
 
     const result = await Company.insertMany(req.body);
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "company is added successfully",
       result,
     });
-  } else {
-    next(new AppError("you are not authorized to add a company.", 401));
   }
+  return next(new AppError("you are not authorized to add a company.", 401));
 });
 
 // ^ update company
 export const updateCompany = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const company = await Company.findById(req.params.companyName);
+    const company = await Company.findById(req.params.companyId);
 
-    if (!company) next(new AppError("company is not found", 404));
+    if (!company) return next(new AppError("company is not found", 404));
 
     if (company.companyHR !== req.user.userId)
       return next(
-        new AppError("you are not authorized to update a company", 401)
+        new AppError("you are not authorized to update the company", 401)
       );
 
     const result = await Company.findByIdAndUpdate(
@@ -36,6 +36,24 @@ export const updateCompany = catchError(async (req, res, next) => {
         new: true,
       }
     );
+    res.json({ message: "success", result });
+  }
+});
+
+// ^ delete company
+
+export const deleteCompany = catchError(async (req, res, next) => {
+  if (req.user.role === "Company_HR") {
+    const company = await Company.findById(req.params.companyId);
+
+    if (!company) return next(new AppError("company is not found", 404));
+
+    if (company.companyHR !== req.user.userId)
+      return next(
+        new AppError("you are not authorized to delete the company", 401)
+      );
+
+    const result = await Company.findByIdAndDelete(company.companyName);
     res.json({ message: "success", result });
   }
 });
