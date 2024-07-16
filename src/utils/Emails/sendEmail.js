@@ -5,6 +5,7 @@ import catchError from "./../Handle Errrors/catchError.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+// * is used to create a transport and define the email structure with info about the sender and the reciever
 const sendMails = catchError(async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",

@@ -1,7 +1,19 @@
+import jwt from "jsonwebtoken";
 import catchError from "../utils/Handle Errrors/catchError";
+// ^config .env
+import dotenv from "dotenv";
+dotenv.config();
 
-export const verifyToken = catchError((req, res, next) => {
+// ^ used to make sure that the user is authorized by verifying its token that should be sent in the headers with any made request
+const verifyToken = catchError((req, res, next) => {
   const { token } = req.headers;
 
-  jwt;
+  jwt.verify(token, process.env.SIGNIN_KEY, async (err, decoded) => {
+    if (err) return new AppError("error in token validation", 409);
+
+    req.user = decoded;
+    next();
+  });
 });
+
+export default verifyToken;
