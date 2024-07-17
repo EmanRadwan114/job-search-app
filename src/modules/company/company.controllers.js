@@ -4,6 +4,7 @@ import AppError from "./../../utils/Handle Errrors/AppError.js";
 import Application from "../../../database/models/application.model.js";
 import Job from "./../../../database/models/job.model.js";
 
+// ^add company
 export const addCompany = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
     let company = await Company.findOne({ companyName: req.body.companyName });
@@ -84,7 +85,7 @@ export const searchCompany = catchError(async (req, res, next) => {
     const companies = await Company.find({
       companyName: new RegExp(name, "i"),
     });
-
+    console.log(companies[0].companyHR);
     return res.json({ message: "success", companies });
   }
   return next(new AppError("Your Access is Denied", 403));

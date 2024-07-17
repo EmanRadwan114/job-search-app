@@ -19,14 +19,14 @@ export const addJob = catchError(async (req, res, next) => {
 // ^ Update Job
 export const updateJob = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const company = await Company.findOne({ companyHR: req.user.userId });
-    if (!company) return next(new AppError("Access Denied", 401));
-
     const job = await Job.findById(req.params.jobId);
 
     if (!job) return next(new AppError("job is not found", 404));
 
-    if (job.addedBy !== company._id)
+    const company = await Company.findById(job.addedBy);
+    if (!company) return next(new AppError("Access Denied", 401));
+
+    if (company.companyHR.toString() !== req.user.userId)
       return next(new AppError("Your Access is Denied", 403));
 
     const result = await Job.findByIdAndUpdate(
@@ -46,14 +46,14 @@ export const updateJob = catchError(async (req, res, next) => {
 // ^ Delete Job
 export const deleteJob = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const company = await Company.findOne({ companyHR: req.user.userId });
-    if (!company) return next(new AppError("company is not found", 404));
-
     const job = await Job.findById(req.params.jobId);
 
     if (!job) return next(new AppError("job is not found", 404));
 
-    if (job.addedBy !== company._id)
+    const company = await Company.findById(job.addedBy);
+    if (!company) return next(new AppError("Access Denied", 401));
+
+    if (company.companyHR.toString() !== req.user.userId)
       return next(new AppError("Your Access is Denied", 403));
 
     const result = await Job.findByIdAndDelete({
