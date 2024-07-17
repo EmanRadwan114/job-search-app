@@ -79,7 +79,7 @@ export const getCompanyJobs = catchError(async (req, res, next) => {
     if (!company) return next(new AppError("no companies are found", 404));
 
     const jobs = await Job.find({
-      addedBy: company.companyHR,
+      addedBy: company.companyHR.toString(),
     });
 
     if (!jobs) return next(new AppError("no jobs are found", 404));
