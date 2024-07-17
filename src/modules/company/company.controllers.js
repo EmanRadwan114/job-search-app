@@ -85,7 +85,10 @@ export const searchCompany = catchError(async (req, res, next) => {
     const companies = await Company.find({
       companyName: new RegExp(name, "i"),
     });
-    console.log(companies[0].companyHR);
+
+    if (!companies || companies.length === 0)
+      return next(new AppError("no companies found", 404));
+
     return res.json({ message: "success", companies });
   }
   return next(new AppError("Your Access is Denied", 403));
@@ -108,6 +111,8 @@ export const getApplicationsForJob = catchError(async (req, res, next) => {
       .populate("jobId")
       .populate("userData");
 
+    if (!applications || applications.length === 0)
+      return next(new AppError("no applications found", 404));
     return res.json({ message: "success", applications });
   }
   return next(new AppError("Your Access is Denied", 403));

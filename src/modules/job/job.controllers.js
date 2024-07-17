@@ -69,7 +69,8 @@ export const getAllJobs = catchError(async (req, res, next) => {
   if (req.user.role === "User" || req.user.role === "Company_HR") {
     const jobs = await Job.find().populate("addedBy");
 
-    if (!jobs) return next(new AppError("no jobs are found", 404));
+    if (!jobs || jobs.length === 0)
+      return next(new AppError("no jobs are found", 404));
 
     return res.json({ message: "success", jobs });
   }
@@ -89,7 +90,8 @@ export const getCompanyJobs = catchError(async (req, res, next) => {
       addedBy: company._id,
     });
 
-    if (!jobs) return next(new AppError("no jobs are found", 404));
+    if (!jobs || jobs.length === 0)
+      return next(new AppError("no jobs are found", 404));
 
     return res.json({ message: "success", jobs });
   }
@@ -112,12 +114,14 @@ export const filterJobs = catchError(async (req, res, next) => {
     if (workingTime) filters.workingTime = workingTime;
     if (jobLocation) filters.jobLocation = jobLocation;
     if (seniorityLevel) filters.seniorityLevel = seniorityLevel;
-    if (jobTitle) filters.title = new RegExp(jobTitle, "i");
-    if (technicalSkills)
-      filters.technicalSkills = { $all: technicalSkills.split(",") };
+    if (jobTitle) filters.jobTitle = new RegExp(jobTitle, "i");
+    if (technicalSkills) filters.technicalSkills = { $all: technicalSkills };
 
     const jobs = await Job.find(filters);
-    if (!jobs) return next(new AppError("no jobs are found", 404));
+
+    if (!jobs || jobs.length === 0)
+      return next(new AppError("no jobs are found", 404));
+
     return res.json({ message: "success", jobs });
   }
   return next(new AppError("Your Access is Denied", 403));
