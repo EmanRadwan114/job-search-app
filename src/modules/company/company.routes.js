@@ -23,6 +23,19 @@ const companyRouter = Router();
 companyRouter.post("/", addCompany);
 
 /* 
+* searchCompany steps:
+^ 1. check if the searcher is a company hr or user (signed up) or not registered 
+^    (if he is authorized to search a company) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. find the company by its name (apply regex with i flag to cancel case sensitivity) that is sent in 
+^    the query param to check if it is already existed or not and handle errors if there is any
+
+^ 3. if there is no error, send the data of the searched company in the response
+*/
+companyRouter.get("/search", searchCompany);
+
+/* 
 * updateCompany steps:
 ^ 1. check if the user is a company hr (if he is authorized to update a company) by checking the role added 
 ^    to the req.user at the verify token middleware after token verification
@@ -60,19 +73,6 @@ companyRouter
   .put(updateCompany)
   .delete(deleteCompany)
   .get(getCompanyData);
-
-/* 
-* searchCompany steps:
-^ 1. check if the searcher is a company hr or user (signed up) or not registered 
-^    (if he is authorized to search a company) by checking the role added 
-^    to the req.user at the verify token middleware after token verification
-
-^ 2. find the company by its name (apply regex with i flag to cancel case sensitivity) that is sent in 
-^    the query param to check if it is already existed or not and handle errors if there is any
-
-^ 3. if there is no error, send the data of the searched company in the response
-*/
-companyRouter.get("/search", searchCompany);
 
 companyRouter.get(
   "/:companyId/jobs/:jobId/applications",
