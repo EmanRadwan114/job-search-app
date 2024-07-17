@@ -66,7 +66,8 @@ export const getCompanyData = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
     const company = await Company.findById({
       _id: req.params.companyId,
-    }).populate("companyHR");
+    }).populate("companyHR", ["userName", "email"]);
+
     if (!company) return next(new AppError("company is not found", 404));
 
     return res.json({ message: "success", company });
