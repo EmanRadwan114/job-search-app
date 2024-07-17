@@ -29,7 +29,7 @@ authRouter.post("/signup", validateSchema(signUpVal), checkEmailExists, signup);
 
 ^ 3. if the token is valid, we find the user email and mark it as confirmed in the database
 */
-authRouter.get("/verify/:token", sendMails, verifyEmail);
+authRouter.get("/verify/:token", verifyEmail);
 
 /*
 * signin steps:

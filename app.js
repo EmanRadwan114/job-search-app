@@ -1,3 +1,5 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 // ^handle programming err
 process.on("uncaughtException", (err) =>
   console.log("there is a programming error", err)

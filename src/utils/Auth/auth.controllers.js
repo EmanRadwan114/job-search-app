@@ -12,7 +12,7 @@ import catchError from "../Handle Errrors/catchError.js";
 // ^sign up
 export const signup = catchError(async (req, res, next) => {
   const user = await User.insertMany(req.body);
-  sendMails(req.body.email);
+  await sendMails(user[0].email);
   res.status(201).json({
     message:
       "user is signed up successfully, check your email for verification",
@@ -29,7 +29,7 @@ export const verifyEmail = catchError(async (req, res, next) => {
         return new AppError("error in verify email token validation", 409);
       await User.findOneAndUpdate(
         { email: payload.email },
-        { isEmailConfirmend: true }
+        { isEmailConfirmed: true }
       );
       res.json({
         message: "email verified successfully",

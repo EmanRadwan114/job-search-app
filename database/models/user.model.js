@@ -59,7 +59,7 @@ const schema = new Schema(
       enem: ["online", "offline"],
       default: "offline",
     },
-    isEmailConfirmend: {
+    isEmailConfirmed: {
       type: Boolean,
       default: false,
     },
