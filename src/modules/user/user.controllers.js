@@ -34,7 +34,7 @@ export const updateAccount = catchError(async (req, res, next) => {
 export const deleteAccount = catchError(async (req, res, next) => {
   const user = await User.findByIdAndDelete({ _id: req.user.userId });
   if (!user) return next(new AppError("User not found.", 404));
-  res.json({ message: "success", result });
+  res.json({ message: "success", user });
 });
 
 // ^ get user account data
