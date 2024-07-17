@@ -1,4 +1,7 @@
 import mongoose, { Schema } from "mongoose";
+// ^config .env
+import dotenv from "dotenv";
+dotenv.config();
 
 const schema = new Schema(
   {
@@ -6,12 +9,13 @@ const schema = new Schema(
       type: mongoose.Types.ObjectId,
       ref: "Job",
       required: [true, "job id is required"],
+      alias: "jobData",
     },
     userId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: [true, "user id is required"],
-      alias: "UserData",
+      alias: "userData",
     },
     userTechSkills: {
       type: [String],
@@ -30,6 +34,10 @@ const schema = new Schema(
     timestamps: true,
   }
 );
+
+schema.post("init", (doc) => {
+  doc.userResume = `${process.env.VERCEL_BASEURL}/uploads/${doc.userResume}`;
+});
 
 const Application = mongoose.model("Application", schema);
 

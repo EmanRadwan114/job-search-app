@@ -65,7 +65,7 @@ jobRouter.get("/company", getCompanyJobs);
 jobRouter.get("/filter", filterJobs);
 
 /*
-* filterJobs steps:
+* applyForJob steps:
 ^ 1. check if the searcher is a user  or not by checking the role added 
 ^    to the req.user at the verify token middleware after token verification
 

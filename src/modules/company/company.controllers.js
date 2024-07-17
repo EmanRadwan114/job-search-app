@@ -107,12 +107,24 @@ export const getApplicationsForJob = catchError(async (req, res, next) => {
     const job = await Job.findById(req.params.jobId);
     if (!job) return next(new AppError("job is not found", 404));
 
-    const applications = await Application.find({ jobId: job._id })
-      .populate("jobId")
-      .populate("userData");
+    let applications = await Application.find({ jobId: job._id })
+      .populate("jobId", ["jobTitle"])
+      .populate("userId", ["userName", "email"]);
 
     if (!applications || applications.length === 0)
       return next(new AppError("no applications found", 404));
+
+    applications = applications.map((app) => {
+      const application = {
+        userData: app.userData,
+        jobData: app.jobData,
+        app: app,
+      };
+      app.jobId = undefined;
+      app.userId = undefined;
+      return application;
+    });
+
     return res.json({ message: "success", applications });
   }
   return next(new AppError("Your Access is Denied", 403));

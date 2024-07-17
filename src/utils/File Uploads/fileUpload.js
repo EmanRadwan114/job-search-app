@@ -13,7 +13,6 @@ function fileUpload() {
   });
 
   function fileFilter(req, file, cb) {
-    console.log(file);
     const type = file.mimetype.split("/");
     if (type[1] === "pdf") {
       cb(null, true);
