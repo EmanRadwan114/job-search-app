@@ -22,7 +22,7 @@ export const addCompany = catchError(async (req, res, next) => {
 // ^ update company
 export const updateCompany = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const company = await Company.findById({ _id: req.params.companyId });
+    const company = await Company.findById(req.params.companyId);
 
     if (!company) return next(new AppError("company is not found", 404));
 
@@ -46,7 +46,7 @@ export const updateCompany = catchError(async (req, res, next) => {
 // ^ delete company
 export const deleteCompany = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const company = await Company.findById({ _id: req.params.companyId });
+    const company = await Company.findById(req.params.companyId);
 
     if (!company) return next(new AppError("company is not found", 404));
 
@@ -64,9 +64,10 @@ export const deleteCompany = catchError(async (req, res, next) => {
 // ^getcompany data
 export const getCompanyData = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const company = await Company.findById({
-      _id: req.params.companyId,
-    }).populate("companyHR", ["userName", "email"]);
+    const company = await Company.findById(req.params.companyId).populate(
+      "companyHR",
+      ["userName", "email"]
+    );
 
     if (!company) return next(new AppError("company is not found", 404));
 
@@ -92,14 +93,14 @@ export const searchCompany = catchError(async (req, res, next) => {
 // ^ get all applications of a specific job
 export const getApplicationsForJob = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const company = await Company.findById({ _id: req.params.companyId });
+    const company = await Company.findById(req.params.companyId);
 
     if (!company) return next(new AppError("company is not found", 404));
 
     if (company.companyHR.toString() !== req.user.userId)
       return next(new AppError("Your Access is Denied", 403));
 
-    const job = await Job.findById({ _id: req.params.jobId });
+    const job = await Job.findById(req.params.jobId);
     if (!job) return next(new AppError("job is not found", 404));
 
     const applications = await Application.find({ jobId: job._id })

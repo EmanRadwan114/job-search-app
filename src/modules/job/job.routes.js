@@ -50,10 +50,34 @@ jobRouter.route("/").post(addJob).get(getAllJobs);
 
 jobRouter.get("/company", getCompanyJobs);
 
-// !fgggggg
+/*
+* filterJobs steps:
+^ 1. check if the searcher is a company hr or user (signed up) or not registered 
+^    (if he is authorized to filter jobs) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. get all filteration queries from the query param to find the matched job
+
+^ 3. find any matched jobs and handle errors if there is any
+
+^ 4. send the response
+*/
 jobRouter.get("/filter", filterJobs);
 
-// !fgggggg
+/*
+* filterJobs steps:
+^ 1. check if the searcher is a user  or not by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. allow multer to handle file storage and data parsing by applying the uploadSingleFile middleware
+
+^ 4. add the filename (added to req.file by multer) to the userResume field in the dadatabase schema, 
+^    so we save only the filename in the database
+
+^ 5. insert the application in the database and handle errors if there is any
+
+^ 6. send the response
+*/
 jobRouter.post("/apply", uploadSingleFile("resume"), applyForJob);
 
 /* 

@@ -19,7 +19,7 @@ export const addJob = catchError(async (req, res, next) => {
 // ^ Update Job
 export const updateJob = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const job = await Job.findById({ _id: req.params.jobId });
+    const job = await Job.findById(req.params.jobId);
 
     if (!job) return next(new AppError("job is not found", 404));
 
@@ -43,7 +43,7 @@ export const updateJob = catchError(async (req, res, next) => {
 // ^ Delete Job
 export const deleteJob = catchError(async (req, res, next) => {
   if (req.user.role === "Company_HR") {
-    const job = await Job.findById({ _id: req.params.jobId });
+    const job = await Job.findById(req.params.jobId);
 
     if (!job) return next(new AppError("job is not found", 404));
 
@@ -126,7 +126,7 @@ export const applyForJob = catchError(async (req, res, next) => {
     if (!application)
       return next(new AppError("error in applying for this job", 404));
 
-    return res.json({ message: "success", application });
+    return res.json({ message: "success" });
   }
   return next(new AppError("Your Access is Denied", 403));
 });
