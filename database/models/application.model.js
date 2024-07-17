@@ -11,6 +11,7 @@ const schema = new Schema(
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: [true, "user id is required"],
+      alias: "UserData",
     },
     userTechSkills: {
       type: [String],

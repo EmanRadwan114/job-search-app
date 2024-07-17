@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   addCompany,
   deleteCompany,
+  getApplicationsForJob,
   getCompanyData,
   searchCompany,
   updateCompany,
@@ -20,6 +21,7 @@ const companyRouter = Router();
 */
 
 companyRouter.post("/", addCompany);
+
 /* 
 * updateCompany steps:
 ^ 1. check if the user is a company hr (if he is authorized to update a company) by checking the role added 
@@ -71,5 +73,10 @@ companyRouter
 ^ 3. if there is no error, send the data of the searched company in the response
 */
 companyRouter.get("/search", searchCompany);
+
+companyRouter.get(
+  "/:companyId/jobs/:jobId/applications",
+  getApplicationsForJob
+);
 
 export default companyRouter;
