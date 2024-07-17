@@ -29,7 +29,7 @@ export const updateCompany = catchError(async (req, res, next) => {
     if (company.companyHR.toString() !== req.user.userId)
       return next(new AppError("Your Access is Denied", 403));
 
-    const result = await Company.findByIdAndUpdate(
+    const result = await Company.findOneAndUpdate(
       {
         companyName: company.companyName,
       },
@@ -53,7 +53,7 @@ export const deleteCompany = catchError(async (req, res, next) => {
     if (company.companyHR.toString() !== req.user.userId)
       return next(new AppError("Your Access is Denied", 403));
 
-    const result = await Company.findByIdAndDelete({
+    const result = await Company.findOneAndDelete({
       companyName: company.companyName,
     });
     return res.json({ message: "success", result });
