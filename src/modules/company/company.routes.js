@@ -35,6 +35,11 @@ companyRouter.post("/", addCompany);
 */
 companyRouter.get("/search", searchCompany);
 
+companyRouter.get(
+  "/:companyId/jobs/:jobId/applications",
+  getApplicationsForJob
+);
+
 /* 
 * updateCompany steps:
 ^ 1. check if the user is a company hr (if he is authorized to update a company) by checking the role added 
@@ -73,10 +78,5 @@ companyRouter
   .put(updateCompany)
   .delete(deleteCompany)
   .get(getCompanyData);
-
-companyRouter.get(
-  "/:companyId/jobs/:jobId/applications",
-  getApplicationsForJob
-);
 
 export default companyRouter;
