@@ -67,7 +67,7 @@ export const updatePassword = catchError(async (req, res, next) => {
   );
   const user = await User.findByIdAndUpdate(
     { _id: req.user.userId },
-    req.body.password,
+    req.body,
     {
       new: true,
     }
