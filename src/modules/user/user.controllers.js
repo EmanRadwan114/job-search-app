@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import User from "./../../../database/models/user.model.js";
 import catchError from "./../../utils/Handle Errrors/catchError.js";
 import AppError from "./../../utils/Handle Errrors/AppError.js";
@@ -60,6 +61,10 @@ export const getProfileData = catchError(async (req, res, next) => {
 
 // ^ update password
 export const updatePassword = catchError(async (req, res, next) => {
+  req.body.password = bcrypt.hashSync(
+    req.body.password,
+    +process.env.SALT_ROUND
+  );
   const user = await User.findByIdAndUpdate(
     { _id: req.user.userId },
     req.body.password,
