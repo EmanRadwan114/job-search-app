@@ -1,12 +1,14 @@
 import { Router } from "express";
 import {
   addJob,
+  applyForJob,
   deleteJob,
   filterJobs,
   getAllJobs,
   getCompanyJobs,
   updateJob,
 } from "./job.controllers.js";
+import { uploadSingleFile } from "../../utils/File Uploads/fileUpload.js";
 
 const jobRouter = Router();
 
@@ -19,7 +21,40 @@ const jobRouter = Router();
 
 ^ 3. add the job as a collection in the database, then send the response
 */
-jobRouter.post("/", addJob);
+
+/*
+* getAllJobs steps:
+^ 1. check if the searcher is a company hr or user (signed up) or not registered 
+^    (if he is authorized to search a company) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. get all jobs and populate it with the addedBy field in order to get the job's company info
+
+^ 3. errors are handled and the user can see the response
+*/
+
+jobRouter.route("/").post(addJob).get(getAllJobs);
+
+/*
+* getCompanyJobs steps:
+^ 1. check if the searcher is a company hr or user (signed up) or not registered 
+^    (if he is authorized to search a company) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. search in Company model by name in which the name is provide in the query params, then handle any error when found
+
+^ 3. after getting company details, find all jobs that are posted by the Company (using HR id) and hand;le any error when found
+
+^ 4. send the response
+*/
+
+jobRouter.get("/company", getCompanyJobs);
+
+// !fgggggg
+jobRouter.get("/filter", filterJobs);
+
+// !fgggggg
+jobRouter.post("/apply", uploadSingleFile("resume"), applyForJob);
 
 /* 
 * updateJob steps:
@@ -45,35 +80,5 @@ jobRouter.post("/", addJob);
 */
 
 jobRouter.route("/:jobId").put(updateJob).delete(deleteJob);
-
-/*
-* getAllJobs steps:
-^ 1. check if the searcher is a company hr or user (signed up) or not registered 
-^    (if he is authorized to search a company) by checking the role added 
-^    to the req.user at the verify token middleware after token verification
-
-^ 2. get all jobs and populate it with the addedBy field in order to get the job's company info
-
-^ 3. errors are handled and the user can see the response
-*/
-
-jobRouter.get("/", getAllJobs);
-
-/*
-* getCompanyJobs steps:
-^ 1. check if the searcher is a company hr or user (signed up) or not registered 
-^    (if he is authorized to search a company) by checking the role added 
-^    to the req.user at the verify token middleware after token verification
-
-^ 2. search in Company model by name in which the name is provide in the query params, then handle any error when found
-
-^ 3. after getting company details, find all jobs that are posted by the Company (using HR id) and hand;le any error when found
-
-^ 4. send the response
-*/
-
-jobRouter.get("/company", getCompanyJobs);
-
-jobRouter.get("/filter", filterJobs);
 
 export default jobRouter;

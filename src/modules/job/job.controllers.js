@@ -2,6 +2,7 @@ import catchError from "./../../utils/Handle Errrors/catchError.js";
 import Job from "../../../database/models/job.model.js";
 import AppError from "./../../utils/Handle Errrors/AppError.js";
 import Company from "../../../database/models/company.model.js";
+import Application from "../../../database/models/application.model.js";
 
 // ^ add job
 export const addJob = catchError(async (req, res, next) => {
@@ -90,7 +91,7 @@ export const getCompanyJobs = catchError(async (req, res, next) => {
 });
 
 // ^ Get all Jobs that match the following filters
-export const filterJobs = async (req, res) => {
+export const filterJobs = catchError(async (req, res, next) => {
   const {
     workingTime,
     jobLocation,
@@ -114,4 +115,18 @@ export const filterJobs = async (req, res) => {
     return res.json({ message: "success", jobs });
   }
   return next(new AppError("Your Access is Denied", 403));
-};
+});
+
+// ^ apply for job
+export const applyForJob = catchError(async (req, res, next) => {
+  if (req.user.role === "User") {
+    req.body.userResume = req.file.filename;
+    const application = Application.insertMany(req.body);
+
+    if (!application)
+      return next(new AppError("error in applying for this job", 404));
+
+    return res.json({ message: "success", application });
+  }
+  return next(new AppError("Your Access is Denied", 403));
+});

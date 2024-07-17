@@ -35,6 +35,7 @@ companyRouter.post("/", addCompany);
 */
 companyRouter.get("/search", searchCompany);
 
+// !fgggggg
 companyRouter.get(
   "/:companyId/jobs/:jobId/applications",
   getApplicationsForJob
