@@ -35,7 +35,20 @@ companyRouter.post("/", addCompany);
 */
 companyRouter.get("/search", searchCompany);
 
-// !fgggggg
+/* 
+* getApplicationsForJob steps:
+^ 1. check if the user is a company hr (if he is authorized to add a company) by checking the role added 
+^    to the req.user at the verify token middleware after token verification
+
+^ 2. find the company by its id that is sent in the req.params, then check if the companyHR the 
+^    same person trying to access that application or not and handle any errors
+
+^ 3. find job by id that is sent in the req.params in order to use it to get its specific applications
+
+^ 4. find application by its assiociated job id and populate with company and user to get their info in the results
+
+^ 5. update the name of userId & jobId keys and send the response
+*/
 companyRouter.get(
   "/:companyId/jobs/:jobId/applications",
   getApplicationsForJob

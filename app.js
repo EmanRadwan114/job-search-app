@@ -13,6 +13,9 @@ import express from "express";
 import "./database/dbConnection.js";
 import bootstrap from "./src/utils/bootstrap.js";
 
+// ^serve static files
+app.use(express.static("uploads"));
+
 // ^creates an app server
 const app = express();
 const PORT = process.env.PORT || 3000;

@@ -16,8 +16,7 @@ export default function bootstrap(app) {
 
   // ^parses the body of the request that includes JSON payload
   app.use(express.json());
-  app.use(express.static("uploads"));
-
+  
   // ^handle app routes
   app.use("/auth", authRouter);
   app.use("/user", verifyToken, userRouter);
