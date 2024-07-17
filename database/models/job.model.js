@@ -35,7 +35,7 @@ const schema = new Schema(
     },
     addedBy: {
       type: mongoose.Types.ObjectId,
-      ref: "User",
+      ref: "Company",
       required: [true, "Company HR Id is required"],
     },
   },
