@@ -72,7 +72,7 @@ jobRouter.get("/", getAllJobs);
 ^ 4. send the response
 */
 
-jobRouter.get("/company", getCompanyJobs);
+jobRouter.get("/company/:companyName", getCompanyJobs);
 
 jobRouter.get("/filter", filterJobs);
 
