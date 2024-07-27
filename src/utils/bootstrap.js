@@ -1,4 +1,3 @@
-import express from "express";
 import cors from "cors";
 import jobRouter from "./../modules/job/job.routes.js";
 import companyRouter from "./../modules/company/company.routes.js";
@@ -10,13 +9,13 @@ import userRouter from "../modules/user/user.routes.js";
 import verifyToken from "../middleware/verifyToken.middleware.js";
 
 // * made to collect every app.use in the entry file
-export default function bootstrap(app) {
+export default function bootstrap(app, express) {
   // ^allow any domain to access my app endpoints
   app.use(cors());
 
   // ^parses the body of the request that includes JSON payload
   app.use(express.json());
-  
+
   // ^handle app routes
   app.use("/auth", authRouter);
   app.use("/user", verifyToken, userRouter);

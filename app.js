@@ -13,15 +13,16 @@ import express from "express";
 import "./database/dbConnection.js";
 import bootstrap from "./src/utils/bootstrap.js";
 
+// ^creates an app server
+const app = express();
+
 // ^serve static files
 app.use(express.static("uploads"));
 
-// ^creates an app server
-const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ^includes any app.use()
-bootstrap(app);
+bootstrap(app, express);
 
 // ^handle err outside express
 process.on("unhandledRejection", (err) =>
